@@ -1,0 +1,33 @@
+const Post = require('../models/post');
+
+module.exports = app => {
+    // CREATE
+    app.post("/posts/new", async (req, res) => {
+        // INSTANTIATE INSTANCE OF POST MODEL
+        const post = await new Post(req.body);
+        // SAVE INSTANCE OF POST MODEL TO DB
+        post.save((err, post) => {
+            // REDIRECT TO THE ROOT
+            return res.redirect(`/`);
+        })
+    });
+
+    app.get('/', (req, res) => {
+        Post.find({}).lean()
+            .then(posts => {
+                res.render("posts_index", { posts });
+            })
+            .catch(err => {
+                console.log(err.message);
+        });
+    });
+};
+
+
+// Post.find({}).lean()
+//     .then(posts => {
+//         res.render("posts_index", { posts });
+// })
+//     .catch(err => {
+//     console.log(err.message);
+// });

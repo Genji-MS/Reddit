@@ -1,7 +1,7 @@
 // Initialize express
 const express = require('express')
 const app = express()
-require('./controllers/post.js')(app);
+require('./controllers/posts.js')(app);
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 
@@ -10,7 +10,7 @@ exphbs = require('express-handlebars'),
 app.engine('hbs', exphbs({defaultLayout: 'main', extname: '.hbs'}));
 app.set('view engine', 'hbs');
 
-// Use Body Parser
+// Use Body Parserx§
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // Add after body parser initialization!
@@ -18,27 +18,17 @@ app.use(expressValidator());
 // Set db
 require('./data/reddit_db');
 
-// Tell our app to send the "hello world" message to our home page
-app.get('/', async (req, res) => {
-    try{
-        //events = await models.Event.findAll({ order: [['createdAt', 'DESC']] });
-        events =  await {msg:'Hello World'}
-        return res.render('home', { events });
-    } catch (err) {
-        return console.log(err);
-    }
-})
 
-app.get('/post/new', async (req, res) => {
+app.get('/posts/new', async (req, res) => {
     try {
         events = ''
-        return res.render('post_new', { events })
+        return res.render('posts_new', { events })
     } catch (err) {
         return console.log(err);
     }
 })
 
-app.get('/post/create'), async (req, res) => {
+app.get('/posts/create'), async (req, res) => {
     try {
         return console.log('created')
     } catch (err) {
