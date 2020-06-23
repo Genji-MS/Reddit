@@ -6,13 +6,8 @@ const url = "mongodb://localhost/reddit_db";
 mongoose.Promise = global.Promise;
 mongoose.connect(
   "mongodb://localhost/reddit-db",
-  { useNewUrlParser: true }
-);
-mongoose.connection.on("error", console.error.bind(console, "MongoDB connection Error:"));
-
-mongoose.connect(
-  url,
-  { useNewUrlParser: true },
+  { useUnifiedTopology: true,
+    useNewUrlParser: true },
   function(err, db) {
     assert.equal(null, err);
     console.log("Connected successfully to database");
