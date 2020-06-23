@@ -18,7 +18,6 @@ app.use(expressValidator());
 // Set db
 require('./data/reddit_db');
 
-
 app.get('/posts/new', async (req, res) => {
     try {
         events = ''
