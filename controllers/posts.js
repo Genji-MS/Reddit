@@ -12,6 +12,7 @@ module.exports = app => {
         });
     });
 
+    // NEW
     app.get('/posts/new', async (req, res) => {
         try {
             return res.render('posts_new', {})
@@ -35,20 +36,27 @@ module.exports = app => {
     // GET ONE
     app.get("/posts/:id", function(req, res) {
         // LOOK UP THE POST
-        Post.findById(req.params.id).then(post => {
+        Post.findById(req.params.id).populate('comments').then((post) => {
             post = post.toObject();
-            console.log(post);
-            res.render("posts_show", { post });
-        }).catch(err => {
-            console.log(err.message);
+            res.render('posts_show', { post })
+        }).catch((err) => {
+            console.log(err.message)
         });
+        // Post.findById(req.params.id).then(post => {
+        //     // CONVERT SINCGLE POST TO OBJECT
+        //     //console.log(post);
+        //     res.render("posts_show", { post });
+        // }).catch(err => {
+        //     console.log(err.message);
+        // });
     });
 
     // SUBREDDIT
     app.get("/n/:subreddit", function(req, res) {
         Post.find({ subreddit: req.params.subreddit }).then(posts => {
+            // CONVERT ARRAY INTO OBJECTS
             posts = posts.map(function(posts) { return posts.toObject(); });
-            console.log(posts)
+            //console.log(posts)
             res.render("posts_index", { posts });
         })
         .catch(err => {
@@ -56,12 +64,3 @@ module.exports = app => {
         });
     });
 };
-
-
-// Post.find({}).lean()
-//     .then(posts => {
-//         res.render("posts_index", { posts });
-// })
-//     .catch(err => {
-//     console.log(err.message);
-// });
