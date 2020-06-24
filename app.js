@@ -30,8 +30,7 @@ app.get('/posts/create'), async (req, res) => {
     try {
         return console.log('created')
     } catch (err) {
-        return console.log(err);
-        
+        return console.log(err); 
     }
 }
 
