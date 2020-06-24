@@ -1,6 +1,9 @@
+<h1>aaviel</h1>
 <div class="row">
   <div class="col-sm-6 col-sm-offset-3">
-    <a href="{{post.url}}" class="lead">{{post.title}}</a>
-    <p>{{post.summary}}</p>
+    {{#each post}}
+    <a href="{{this.url}}" class="lead">{{this.title}}</a>
+    <p>{{this.summary}}</p>
+    {{/each}}
   </div>
 </div>
