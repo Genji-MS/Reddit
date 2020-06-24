@@ -12,6 +12,14 @@ module.exports = app => {
         });
     });
 
+    app.get('/posts/new', async (req, res) => {
+        try {
+            return res.render('posts_new', {})
+        } catch (err) {
+            return console.log(err);
+        }
+    })
+
     // CREATE
     app.post("/posts/new", (req, res) => {
         // INSTANTIATE INSTANCE OF POST MODEL
@@ -38,9 +46,11 @@ module.exports = app => {
     // SUBREDDIT
     app.get("/n/:subreddit", function(req, res) {
         Post.find({ subreddit: req.params.subreddit }).then(posts => {
-            res.render("posts-index", { posts });
-        }).catch(err => {
-        console.log(err);
+            console.log(posts)
+            res.render("posts_index", { posts });
+        })
+        .catch(err => {
+            console.log(err);
         });
     });
 };
