@@ -36,6 +36,7 @@ module.exports = app => {
     app.get("/posts/:id", function(req, res) {
         // LOOK UP THE POST
         Post.findById(req.params.id).then(post => {
+            post = post.toObject();
             console.log(post);
             res.render("posts_show", { post });
         }).catch(err => {
@@ -46,6 +47,7 @@ module.exports = app => {
     // SUBREDDIT
     app.get("/n/:subreddit", function(req, res) {
         Post.find({ subreddit: req.params.subreddit }).then(posts => {
+            posts = posts.map(function(posts) { return posts.toObject(); });
             console.log(posts)
             res.render("posts_index", { posts });
         })
