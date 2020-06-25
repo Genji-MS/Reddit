@@ -1,4 +1,7 @@
-// Initialize express
+require('dotenv').config();
+// Initialize
+var cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
@@ -9,11 +12,17 @@ exphbs = require('express-handlebars'),
 app.engine('hbs', exphbs({defaultLayout: 'main', extname: '.hbs'}));
 app.set('view engine', 'hbs');
 
+// JWT
+//var app = express(); //const is above, why use??
+app.use(cookieParser()); // Add this after you initialize express.
+
 // Use Body Parserx§
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 require('./controllers/posts.js')(app);
 require('./controllers/comments.js')(app);
+require('./controllers/auth.js')(app);
+
 // Add after body parser initialization!
 app.use(expressValidator());
 // Set db
