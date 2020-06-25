@@ -1,10 +1,14 @@
 const Post = require('../models/post');
+const User = require('../models/user');
 
 module.exports = app => {
     // INDEX
     app.get('/', (req, res) => {
         var currentUser = req.user;
+        console.log(req.cookies);
+        
         Post.find({}).lean()
+        .populate('author')
             .then(posts => {
                 res.render("posts_index", { posts, currentUser });
             })
@@ -26,22 +30,34 @@ module.exports = app => {
     // CREATE
     app.post("/posts/new", (req, res) => {
         if (req.user) {
-            var post = new Post(req.body);
-    
-            post.save(function(err, post) {
-            return res.redirect(`/`);
-        });
+            var post = new Post(req.body); 
+            post.author = req.user._id;
+            post
+                .save()
+                .then(post => {
+                    return User.findById(req.user._id);
+                })
+                .then(user => {
+                    user.posts.unshift(post);
+                    user.save();
+                    // REDIRECT TO THE NEW POST
+                    res.redirect(`/posts/${post._id}`);
+                })
+                .catch(err => {
+                    console.log(err.message);
+                });
         } else {
-        return res.status(401); // UNAUTHORIZED
-      }
+            return res.status(401); // UNAUTHORIZED
+        }
     });
     
-
     // GET ONE
     app.get("/posts/:id", function(req, res) {
         // LOOK UP THE POST
         var currentUser = req.user;
-        Post.findById(req.params.id).populate('comments').then((post) => {
+        Post.findById(req.params.id).populate('comments')
+        .populate('author')
+        .then((post) => {
             post = post.toObject();
             res.render('posts_show', { post, currentUser })
         }).catch((err) => {
@@ -59,7 +75,9 @@ module.exports = app => {
     // SUBREDDIT
     app.get("/n/:subreddit", function(req, res) {
         var currentUser = req.user;
-        Post.find({ subreddit: req.params.subreddit }).then(posts => {
+        Post.find({ subreddit: req.params.subreddit })
+        .populate('author')
+        .then(posts => {
             // CONVERT ARRAY INTO OBJECTS
             posts = posts.map(function(posts) { return posts.toObject(); });
             //console.log(posts)
