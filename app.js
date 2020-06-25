@@ -6,11 +6,24 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
+//custom middleware to auth token
+var checkAuth = (req, res, next) => {
+    console.log("Checking authentication");
+    if (typeof req.cookies.nToken === "undefined" || req.cookies.nToken === null) {
+    req.user = null;
+    } else {
+    var token = req.cookies.nToken;
+    var decodedToken = jwt.decode(token, { complete: true }) || {};
+    req.user = decodedToken.payload;
+    }
+    next();
+};
 
 //allows use of shorter extension .hbs instead of .handlebars
 exphbs = require('express-handlebars'),
 app.engine('hbs', exphbs({defaultLayout: 'main', extname: '.hbs'}));
 app.set('view engine', 'hbs');
+
 
 // JWT
 //var app = express(); //const is above, why use??
@@ -19,6 +32,7 @@ app.use(cookieParser()); // Add this after you initialize express.
 // Use Body Parserx§
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(checkAuth); // check token
 require('./controllers/posts.js')(app);
 require('./controllers/comments.js')(app);
 require('./controllers/auth.js')(app);
@@ -27,7 +41,6 @@ require('./controllers/auth.js')(app);
 app.use(expressValidator());
 // Set db
 require('./data/reddit_db');
-
 
 
 // Choose a port to listen on
