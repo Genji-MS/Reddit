@@ -53,23 +53,17 @@ module.exports = app => {
     
     // GET ONE
     app.get("/posts/:id", function(req, res) {
-        // LOOK UP THE POST
+        // SHOW
         var currentUser = req.user;
-        Post.findById(req.params.id).populate('comments')
-        .populate('author')
+        Post.findById(req.params.id).populate({path:'comments', populate: {path: 'author'}}).populate('author')
+        //Post.findById(req.params.id).populate('comments')
+        //.populate('author')
         .then((post) => {
             post = post.toObject();
             res.render('posts_show', { post, currentUser })
         }).catch((err) => {
             console.log(err.message)
         });
-        // Post.findById(req.params.id).then(post => {
-        //     // CONVERT SINCGLE POST TO OBJECT
-        //     //console.log(post);
-        //     res.render("posts_show", { post });
-        // }).catch(err => {
-        //     console.log(err.message);
-        // });
     });
 
     // SUBREDDIT
