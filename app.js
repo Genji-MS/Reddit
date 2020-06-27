@@ -28,6 +28,8 @@ app.set('view engine', 'hbs');
 // JWT
 //var app = express(); //const is above, why use??
 app.use(cookieParser()); // Add this after you initialize express.
+// look in public folder for static files
+app.use(express.static('public'));
 
 // Use Body Parserx§
 app.use(bodyParser.json());
