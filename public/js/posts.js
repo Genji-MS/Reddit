@@ -1,13 +1,14 @@
 $(document).ready(function() {
     $(".vote-up").submit(function(e) {
-        e.preventDefault();
-
+        // e.preventDefault();
+        // console.log("vote registered")
         var postId = $(this).data("id");
         $.ajax({
             type: "PUT",
             url: "posts/" + postId + "/vote_up",
             success: function(data) {
-                console.log("voted up!");
+                location.reload();
+                // console.log("voted up!");
             },
             error: function(err) {
                 console.log(err.messsage);
@@ -15,14 +16,14 @@ $(document).ready(function() {
         });
     });
     $(".vote-down").submit(function(e) {
-        e.preventDefault();
-
+        // e.preventDefault();
         var postId = $(this).data("id");
         $.ajax({
             type: "PUT",
             url: "posts/" + postId + "/vote_down",
             success: function(data) {
-                console.log("voted down!");
+                location.reload();
+                // console.log("voted down!");
             },
             error: function(err) {
                 console.log(err.messsage);

@@ -92,7 +92,7 @@ module.exports = app => {
     app.put("/posts/:id/vote_up", function(req, res) {
         Post.findById(req.params.id).exec(function(err, post) {
         post.upVotes.push(req.user._id);
-        post.voteScore = post.voteScore ++;
+        post.voteScore = post.voteScore +1;
         post.save();
     
         res.status(200);
@@ -102,7 +102,7 @@ module.exports = app => {
     app.put("/posts/:id/vote_down", function(req, res) {
         Post.findById(req.params.id).exec(function(err, post) {
         post.downVotes.push(req.user._id);
-        post.voteScore = post.voteScore --;
+        post.voteScore = post.voteScore -1;
         post.save();
     
         res.status(200);
